@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0f1e"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="accent-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6c63ff"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <filter id="glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="15" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bg-grad)"/>
+  
+  <!-- Decorative Abstract Shapes / Orbs -->
+  <circle cx="200" cy="150" r="180" fill="#6c63ff" opacity="0.08" filter="url(#glow)"/>
+  <circle cx="650" cy="450" r="150" fill="#f59e0b" opacity="0.05" filter="url(#glow)"/>
+
+  <!-- Stylized House Vector -->
+  <g transform="translate(250, 160)" opacity="0.85">
+    <!-- Roof -->
+    <polygon points="150,20 280,130 20,130" fill="url(#accent-grad)"/>
+    <polygon points="150,35 260,130 40,130" fill="#111827"/>
+    
+    <!-- House Body -->
+    <rect x="40" y="130" width="220" height="150" rx="10" fill="url(#bg-grad)" stroke="url(#accent-grad)" stroke-width="3"/>
+    
+    <!-- Door -->
+    <rect x="130" y="200" width="40" height="80" rx="4" fill="url(#gold-grad)"/>
+    <circle cx="162" cy="240" r="3" fill="#fff"/>
+    
+    <!-- Windows -->
+    <rect x="70" y="160" width="40" height="40" rx="6" fill="#1e2235" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <line x1="90" y1="160" x2="90" y2="200" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <line x1="70" y1="180" x2="110" y2="180" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    
+    <rect x="190" y="160" width="40" height="40" rx="6" fill="#1e2235" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <line x1="210" y1="160" x2="210" y2="200" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <line x1="190" y1="180" x2="230" y2="180" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  </g>
+
+  <!-- Typography Logo text -->
+  <text x="50%" y="82%" dominant-baseline="middle" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="28" fill="#f0f4ff" font-weight="800" letter-spacing="1">
+    LuxeImmo
+  </text>
+  <text x="50%" y="88%" dominant-baseline="middle" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="16" fill="#94a3b8" font-weight="500" letter-spacing="3">
+    PREMIUM REAL ESTATE
+  </text>
+</svg>
