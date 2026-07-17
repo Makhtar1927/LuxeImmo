@@ -1,0 +1,26 @@
+<?php
+/**
+ * config/db.php.example
+ * Modèle de configuration PDO - Copiez ce fichier en db.php et adaptez vos paramètres
+ */
+
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'agence_immo');
+define('DB_USER', 'root');       // Remplacer par votre utilisateur MySQL
+define('DB_PASS', '');           // Remplacer par votre mot de passe MySQL
+define('DB_CHARSET', 'utf8mb4');
+
+$dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+
+try {
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+} catch (PDOException $e) {
+    error_log("Erreur de connexion BDD : " . $e->getMessage());
+    die(json_encode(['success' => false, 'message' => 'Erreur de connexion à la base de données.']));
+}
