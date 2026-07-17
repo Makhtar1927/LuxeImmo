@@ -1,0 +1,28 @@
+# Configuration sensible
+config/db.php
+
+# Fichiers systèmes
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Dossiers de cache
+cache/
+tmp/
+
+# Fichiers PHP locaux
+*.local.php
+
+# IDE et éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (si utilisé)
+node_modules/
