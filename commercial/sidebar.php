@@ -4,6 +4,20 @@
  */
 $current = basename($_SERVER['PHP_SELF']);
 ?>
+<!-- Mobile Header for Dashboard -->
+<div class="dashboard-mobile-header">
+    <button class="sidebar-toggle-btn" title="Ouvrir le menu" aria-label="Ouvrir le menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-logo-mobile">
+        <i class="fas fa-gem" style="color:var(--color-primary-light);"></i> LuxeImmo
+    </div>
+    <div style="width: 38px;"></div> <!-- Spacer to keep logo centered -->
+</div>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay"></div>
+
 <div class="sidebar">
     <!-- Logo + Theme Toggle -->
     <div style="display:flex; align-items:center; justify-content:space-between; padding:0 12px; margin-bottom:36px;">

@@ -9,7 +9,7 @@
     <div class="container">
         <div class="row g-5">
             <!-- Brand & Description -->
-            <div class="col-lg-4">
+            <div class="col-lg-5 col-md-12 mb-4 mb-lg-0">
                 <div class="footer-brand">
                     <i class="fas fa-gem me-2"></i>LuxeImmo
                 </div>
@@ -31,27 +31,19 @@
             </div>
 
             <!-- Liens Utiles -->
-            <div class="col-lg-2 col-md-4">
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
                 <h6 class="footer-heading">Catalogue</h6>
                 <a href="index.php?type=appartement" class="footer-link">Appartements</a>
                 <a href="index.php?type=villa" class="footer-link">Villas</a>
                 <a href="index.php" class="footer-link">Toutes les offres</a>
             </div>
 
-            <!-- Espaces -->
-            <div class="col-lg-2 col-md-4">
-                <h6 class="footer-heading">Espaces</h6>
-                <a href="login.php" class="footer-link">Espace Client</a>
-                <a href="login.php" class="footer-link">Espace Commercial</a>
-                <a href="register.php" class="footer-link">Créer un compte</a>
-            </div>
-
             <!-- Contact -->
-            <div class="col-lg-4 col-md-4">
+            <div class="col-lg-4 col-md-6">
                 <h6 class="footer-heading">Contact</h6>
                 <div class="d-flex align-items-start gap-3 mb-3">
                     <i class="fas fa-map-marker-alt mt-1" style="color: var(--color-primary-light); width:16px;"></i>
-                    <span class="footer-desc" style="max-width:none;">Av. Cheikh Anta Diop, Dakar, Sénégal</span>
+                    <span class="footer-desc" style="max-width:none;">Pikine Dagoudane, Sénégal</span>
                 </div>
                 <div class="d-flex align-items-center gap-3 mb-3">
                     <i class="fas fa-phone" style="color: var(--color-primary-light); width:16px;"></i>
@@ -67,7 +59,7 @@
         <!-- Footer Bottom -->
         <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center">
             <span>&copy; <?= date('Y') ?> LuxeImmo. Tous droits réservés.</span>
-            <span>Fait avec <i class="fas fa-heart" style="color:#ef4444;"></i> à Dakar</span>
+            <span>développé par patriode'dev</span>
         </div>
     </div>
 </footer>

@@ -37,7 +37,7 @@ if (has_role('client')) {
 
 // Biens similaires (même type, même ville, différent ID)
 $sim_stmt = $pdo->prepare("
-    SELECT b.*, (SELECT chemin FROM images WHERE bien_id = b.id AND est_principale = 1 LIMIT 1) AS img
+    SELECT b.*, COALESCE((SELECT chemin FROM images WHERE bien_id = b.id AND est_principale = 1 LIMIT 1), (SELECT chemin FROM images WHERE bien_id = b.id ORDER BY id ASC LIMIT 1)) AS img
     FROM biens b
     WHERE b.type = ? AND b.id != ? AND b.statut = 'disponible'
     ORDER BY ABS(b.prix_mensuel - ?) ASC LIMIT 3
@@ -155,7 +155,7 @@ require_once 'includes/navbar.php';
 
         <!-- Colonne latérale -->
         <div class="col-lg-4">
-            <div style="position:sticky; top:90px;">
+            <div class="sticky-sidebar">
                 <!-- Carte de prix & action -->
                 <div class="glass-card p-4 mb-4">
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
@@ -195,10 +195,10 @@ require_once 'includes/navbar.php';
 
                         <!-- Bouton favori -->
                         <?php if (has_role('client')): ?>
-                        <a href="#" class="btn-outline-immo w-100 justify-content-center favorite-btn <?= $is_favori ? 'active' : '' ?>"
-                           data-bien-id="<?= $bien['id'] ?>" style="padding:12px;">
+                        <a href="#" class="favorite-btn-outline favorite-btn <?= $is_favori ? 'active' : '' ?>"
+                           data-bien-id="<?= $bien['id'] ?>">
                             <i class="<?= $is_favori ? 'fas' : 'far' ?> fa-heart me-2"></i>
-                            <?= $is_favori ? 'Retirer des favoris' : 'Ajouter aux favoris' ?>
+                            <span class="fav-btn-text"><?= $is_favori ? 'Retirer des favoris' : 'Ajouter aux favoris' ?></span>
                         </a>
                         <?php endif; ?>
                     <?php else: ?>
@@ -215,6 +215,10 @@ require_once 'includes/navbar.php';
                         <i class="fas fa-headset me-2" style="color:var(--color-primary-light);"></i>
                         Nous contacter
                     </h3>
+                    <div class="d-flex align-items-center gap-2 mb-3" style="font-size:0.85rem; color:var(--color-text-secondary);">
+                        <i class="fas fa-map-marker-alt" style="color:var(--color-primary-light); width:16px;"></i>
+                        <span>Pikine Dagoudane, Sénégal</span>
+                    </div>
                     <a href="tel:+221771234567" class="btn-outline-immo w-100 justify-content-center mb-2" style="padding:11px;">
                         <i class="fas fa-phone"></i> +221 77 123 45 67
                     </a>

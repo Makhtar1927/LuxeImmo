@@ -90,21 +90,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 $pdo->prepare("DELETE FROM images WHERE bien_id = ?")->execute([$edit_id]);
             }
+            $chk_main = $pdo->prepare("SELECT COUNT(*) FROM images WHERE bien_id = ? AND est_principale = 1");
+            $chk_main->execute([$bien_id_to_use]);
+            $has_main = ($chk_main->fetchColumn() > 0);
 
-            $allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
-            $first_image   = true;
+            $allowed_exts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            $first_image  = true;
 
             foreach ($_FILES['images']['tmp_name'] as $i => $tmp) {
                 if ($_FILES['images']['error'][$i] !== UPLOAD_ERR_OK) continue;
-                if (!in_array($_FILES['images']['type'][$i], $allowed_types)) continue;
-                if ($_FILES['images']['size'][$i] > 5 * 1024 * 1024) continue; // max 5MB
+                if ($_FILES['images']['size'][$i] > 10 * 1024 * 1024) continue; // max 10MB
 
-                $ext      = pathinfo($_FILES['images']['name'][$i], PATHINFO_EXTENSION);
-                $filename = 'bien_' . $bien_id_to_use . '_' . time() . '_' . $i . '.' . strtolower($ext);
+                $ext = strtolower(pathinfo($_FILES['images']['name'][$i], PATHINFO_EXTENSION));
+                if (!in_array($ext, $allowed_exts)) continue;
+
+                $filename = 'bien_' . $bien_id_to_use . '_' . time() . '_' . $i . '.' . $ext;
                 $dest     = $UPLOAD_DIR . $filename;
 
                 if (move_uploaded_file($tmp, $dest)) {
-                    $is_principale = ($first_image && !$edit_id) ? 1 : (isset($_POST['principale_idx']) && $_POST['principale_idx'] == $i ? 1 : 0);
+                    $is_principale = 0;
+                    if (isset($_POST['principale_idx']) && $_POST['principale_idx'] == $i) {
+                        $is_principale = 1;
+                        $pdo->prepare("UPDATE images SET est_principale = 0 WHERE bien_id = ?")->execute([$bien_id_to_use]);
+                        $has_main = true;
+                    } elseif (!$has_main && $first_image) {
+                        $is_principale = 1;
+                        $has_main = true;
+                    }
                     $pdo->prepare("INSERT INTO images (bien_id, chemin, est_principale) VALUES (?, ?, ?)")
                         ->execute([$bien_id_to_use, 'assets/images/' . $filename, $is_principale]);
                     $first_image = false;
@@ -128,22 +140,30 @@ if ($action === 'modifier' && $edit_id) {
     $bien_edit = $bien_edit->fetch();
     $edit_images = $pdo->prepare("SELECT * FROM images WHERE bien_id = ? ORDER BY est_principale DESC");
     $edit_images->execute([$edit_id]);
-    $edit_images = $edit_images->fetchAll();
 }
 
-// ========== LISTE DES BIENS ==============
-$biens = $pdo->query("
-    SELECT b.*, COUNT(i.id) as nb_images,
-           (SELECT chemin FROM images WHERE bien_id=b.id AND est_principale=1 LIMIT 1) AS img
-    FROM biens b LEFT JOIN images i ON i.bien_id = b.id
-    GROUP BY b.id ORDER BY b.date_creation DESC
-")->fetchAll();
+// ========== LISTE DES BIENS (PAGINATION) ==============
+$page  = max(1, (int)($_GET['p'] ?? 1));
+$limit = 8;
+$off   = ($page - 1) * $limit;
+
+$total = $pdo->query("SELECT COUNT(*) FROM biens")->fetchColumn();
+$pages = ceil($total / $limit);
+
+$stmt = $pdo->prepare("
+    SELECT b.*, 
+           COALESCE((SELECT chemin FROM images WHERE bien_id=b.id AND est_principale=1 LIMIT 1), (SELECT chemin FROM images WHERE bien_id=b.id ORDER BY id ASC LIMIT 1)) AS img,
+           (SELECT COUNT(*) FROM reservations WHERE bien_id=b.id) AS nb_res
+    FROM biens b ORDER BY b.id DESC LIMIT ? OFFSET ?
+");
+$stmt->execute([$limit, $off]);
+$biens = $stmt->fetchAll();
 
 $page_title = 'Gestion des biens — LuxeImmo';
 require_once '../includes/header.php';
 ?>
 
-<div style="display:flex;min-height:100vh;background:var(--color-bg-dark);">
+<div class="dashboard-layout">
     <?php require_once 'sidebar.php'; ?>
     <div class="main-content-with-sidebar" style="flex:1;">
 

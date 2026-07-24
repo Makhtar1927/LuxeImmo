@@ -20,7 +20,7 @@ if (!$bien) {
 }
 
 // Récupérer l'image principale
-$img_stmt = $pdo->prepare("SELECT chemin FROM images WHERE bien_id = ? AND est_principale = 1 LIMIT 1");
+$img_stmt = $pdo->prepare("SELECT chemin FROM images WHERE bien_id = ? ORDER BY est_principale DESC, id ASC LIMIT 1");
 $img_stmt->execute([$bien_id]);
 $img = $img_stmt->fetchColumn();
 
@@ -180,7 +180,7 @@ require_once '../includes/navbar.php';
 
         <!-- Récapitulatif du bien -->
         <div class="col-lg-5">
-            <div style="position:sticky;top:90px;">
+            <div class="sticky-sidebar">
                 <div class="glass-card overflow-hidden">
                     <?php if ($img): ?>
                     <img src="../<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($bien['titre']) ?>"

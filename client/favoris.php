@@ -10,7 +10,7 @@ $client_id = $_SESSION['user_id'];
 
 $stmt = $pdo->prepare("
     SELECT b.*, f.id AS favori_id,
-           (SELECT chemin FROM images WHERE bien_id = b.id AND est_principale = 1 LIMIT 1) AS img
+           COALESCE((SELECT chemin FROM images WHERE bien_id = b.id AND est_principale = 1 LIMIT 1), (SELECT chemin FROM images WHERE bien_id = b.id ORDER BY id ASC LIMIT 1)) AS img
     FROM favoris f
     JOIN biens b ON f.bien_id = b.id
     WHERE f.client_id = ?
@@ -23,7 +23,7 @@ $page_title = 'Mes Favoris — LuxeImmo';
 require_once '../includes/header.php';
 ?>
 
-<div style="display:flex; min-height:100vh; background:var(--color-bg-dark);">
+<div class="dashboard-layout">
     <!-- Sidebar -->
     <?php require_once 'sidebar.php'; ?>
 

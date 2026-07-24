@@ -12,15 +12,24 @@
             <i class="fas fa-gem me-2" style="font-size:1.1rem;"></i>LuxeImmo
         </a>
 
-        <!-- Mobile Toggle -->
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarContent" style="color: var(--color-text-secondary);">
-            <i class="fas fa-bars"></i>
-        </button>
+        <!-- Controls container for mobile (Theme Switcher + Hamburger) -->
+        <div class="d-flex align-items-center gap-2">
+            <!-- Theme Toggle Mobile -->
+            <button class="theme-toggle-btn d-lg-none" title="Changer de thème" aria-label="Basculer le thème">
+                <i class="fas fa-sun sun-icon"></i>
+                <i class="fas fa-moon moon-icon"></i>
+            </button>
+            
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent" style="color: var(--color-text-secondary); padding: 0;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
 
         <div class="collapse navbar-collapse" id="navbarContent">
             <!-- Liens de navigation principaux -->
-            <ul class="navbar-nav me-auto ms-4 gap-1">
+            <ul class="navbar-nav me-auto ms-lg-4 ms-0 gap-1 mt-3 mt-lg-0">
                 <li class="nav-item">
                     <a class="nav-link nav-link-immo <?= (basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '') ?>"
                        href="index.php">
@@ -40,9 +49,9 @@
             </ul>
 
             <!-- Actions selon le rôle -->
-            <ul class="navbar-nav align-items-center gap-2">
-                <!-- Bouton Theme Toggle -->
-                <li class="nav-item">
+            <ul class="navbar-nav align-items-stretch align-items-lg-center gap-2 mt-3 mt-lg-0">
+                <!-- Bouton Theme Toggle Desktop -->
+                <li class="nav-item d-none d-lg-block">
                     <button class="theme-toggle-btn" id="theme-toggle" title="Changer de thème" aria-label="Basculer le thème">
                         <i class="fas fa-sun sun-icon"></i>
                         <i class="fas fa-moon moon-icon"></i>

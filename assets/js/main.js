@@ -77,7 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.classList.toggle('active', data.is_favori);
                     const icon = btn.querySelector('i');
                     if (icon) {
-                        icon.className = data.is_favori ? 'fas fa-heart' : 'far fa-heart';
+                        const hasMe2 = icon.classList.contains('me-2');
+                        icon.className = (data.is_favori ? 'fas fa-heart' : 'far fa-heart') + (hasMe2 ? ' me-2' : '');
+                    }
+                    const textSpan = btn.querySelector('.fav-btn-text');
+                    if (textSpan) {
+                        textSpan.textContent = data.is_favori ? 'Retirer des favoris' : 'Ajouter aux favoris';
                     }
                     showToast(data.message, data.is_favori ? 'success' : 'info');
                 } else if (data.redirect) {
@@ -121,6 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return c;
     };
+
+    // Détecter automatiquement un message dans l'URL et afficher le toast
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('msg')) {
+        window.showToast(urlParams.get('msg'), 'success');
+    } else if (urlParams.has('error')) {
+        window.showToast(urlParams.get('error'), 'error');
+    }
 
     // ====================================================
     // 6. Drag & Drop Upload Zone (pour les images des biens)
@@ -289,4 +302,28 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleTheme();
         });
     });
+
+    // ====================================================
+    // 11. Sidebar Drawer Toggle for mobile dashboards
+    // ====================================================
+    const sidebarToggle = document.querySelector('.sidebar-toggle-btn');
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarOverlay = document.querySelector('.sidebar-overlay');
+
+    if (sidebarToggle && sidebar && sidebarOverlay) {
+        const toggleSidebar = (show) => {
+            sidebar.classList.toggle('show', show);
+            sidebarOverlay.classList.toggle('show', show);
+        };
+
+        sidebarToggle.addEventListener('click', () => toggleSidebar(true));
+        sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1024) {
+                toggleSidebar(false);
+            }
+        });
+    }
 });
+

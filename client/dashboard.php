@@ -12,7 +12,7 @@ $client_id = $_SESSION['user_id'];
 // Toutes les réservations du client (avec infos du bien)
 $stmt = $pdo->prepare("
     SELECT r.*, b.titre, b.type, b.prix_mensuel, b.ville,
-           (SELECT chemin FROM images WHERE bien_id = b.id AND est_principale = 1 LIMIT 1) AS img
+           COALESCE((SELECT chemin FROM images WHERE bien_id = b.id AND est_principale = 1 LIMIT 1), (SELECT chemin FROM images WHERE bien_id = b.id ORDER BY id ASC LIMIT 1)) AS img
     FROM reservations r
     JOIN biens b ON r.bien_id = b.id
     WHERE r.client_id = ?
@@ -36,7 +36,7 @@ $page_title = 'Mon Espace — LuxeImmo';
 require_once '../includes/header.php';
 ?>
 
-<div style="display:flex; min-height:100vh; background:var(--color-bg-dark);">
+<div class="dashboard-layout">
     <!-- Sidebar -->
     <?php require_once 'sidebar.php'; ?>
 

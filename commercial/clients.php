@@ -78,7 +78,7 @@ $page_title = 'Gestion des Clients — LuxeImmo';
 require_once '../includes/header.php';
 ?>
 
-<div style="display:flex;min-height:100vh;background:var(--color-bg-dark);">
+<div class="dashboard-layout">
     <?php require_once 'sidebar.php'; ?>
     <div class="main-content-with-sidebar" style="flex:1;">
 

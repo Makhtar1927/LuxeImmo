@@ -10,10 +10,10 @@ require_once 'includes/auth_check.php';
 $type     = $_GET['type']     ?? '';
 $ville    = $_GET['ville']    ?? '';
 $chambres = $_GET['chambres'] ?? '';
-$prix_max = isset($_GET['prix_max']) && is_numeric($_GET['prix_max']) ? (int)$_GET['prix_max'] : 3000000;
+$prix_max = isset($_GET['prix_max']) && is_numeric($_GET['prix_max']) ? (int)$_GET['prix_max'] : 500000;
 
 // === Requête dynamique ===
-$sql    = "SELECT b.*, (SELECT chemin FROM images WHERE bien_id = b.id AND est_principale = 1 LIMIT 1) AS image_principale FROM biens b WHERE 1=1";
+$sql    = "SELECT b.*, COALESCE((SELECT chemin FROM images WHERE bien_id = b.id AND est_principale = 1 LIMIT 1), (SELECT chemin FROM images WHERE bien_id = b.id ORDER BY id ASC LIMIT 1)) AS image_principale FROM biens b WHERE 1=1";
 $params = [];
 
 if ($type && in_array($type, ['appartement', 'villa'])) {
@@ -112,7 +112,7 @@ require_once 'includes/navbar.php';
         <div class="search-bar-wrapper" id="catalogue">
             <form method="GET" action="index.php" id="search-form">
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6 col-12">
                         <span class="search-label"><i class="fas fa-home me-1"></i> Type de bien</span>
                         <select name="type" class="form-select">
                             <option value="" <?= $type === '' ? 'selected' : '' ?>>Tous les types</option>
@@ -120,7 +120,7 @@ require_once 'includes/navbar.php';
                             <option value="villa" <?= $type === 'villa' ? 'selected' : '' ?>>Villa</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6 col-12">
                         <span class="search-label"><i class="fas fa-map-marker-alt me-1"></i> Ville</span>
                         <select name="ville" class="form-select">
                             <option value="">Toutes les villes</option>
@@ -131,7 +131,7 @@ require_once 'includes/navbar.php';
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-lg-2 col-md-6 col-12">
                         <span class="search-label"><i class="fas fa-bed me-1"></i> Chambres min.</span>
                         <select name="chambres" class="form-select">
                             <option value="">Peu importe</option>
@@ -140,7 +140,7 @@ require_once 'includes/navbar.php';
                             <?php endfor; ?>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6 col-12">
                         <span class="search-label">
                             <i class="fas fa-tag me-1"></i> Prix max :
                             <strong id="prix_display" style="color:var(--color-accent-light);">
@@ -148,11 +148,11 @@ require_once 'includes/navbar.php';
                             </strong>
                         </span>
                         <input type="range" name="prix_max" id="prix_max"
-                               min="100000" max="3000000" step="50000"
+                               min="50000" max="500000" step="10000"
                                value="<?= $prix_max ?>"
                                style="width:100%; accent-color:var(--color-primary);">
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-lg-1 col-md-12 col-12">
                         <button type="submit" class="btn-primary-immo w-100 justify-content-center"
                                 style="padding:13px; border-radius:12px;">
                             <i class="fas fa-search"></i>

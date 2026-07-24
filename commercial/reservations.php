@@ -11,9 +11,14 @@ require_role('commercial');
 $action = $_GET['action'] ?? '';
 $res_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if ($res_id && in_array($action, ['valider', 'annuler', 'terminer'])) {
-    $new_status_map = ['valider' => 'validee', 'annuler' => 'annulee', 'terminer' => 'terminee'];
-    $new_status     = $new_status_map[$action];
+if ($res_id && in_array($action, ['valider', 'annuler', 'terminer', 'remettre_en_attente'])) {
+    $new_status_map = [
+        'valider'               => 'validee',
+        'annuler'               => 'annulee',
+        'terminer'              => 'terminee',
+        'remettre_en_attente'   => 'en_attente'
+    ];
+    $new_status = $new_status_map[$action];
 
     // Mettre à jour le statut de la réservation
     $pdo->prepare("UPDATE reservations SET statut = ? WHERE id = ?")->execute([$new_status, $res_id]);
@@ -25,8 +30,8 @@ if ($res_id && in_array($action, ['valider', 'annuler', 'terminer'])) {
         $b = $bid->fetchColumn();
         if ($b) $pdo->prepare("UPDATE biens SET statut = 'reserve' WHERE id = ?")->execute([$b]);
     }
-    // Si annulation ou fin de location, remettre en 'disponible'
-    if (in_array($action, ['annuler', 'terminer'])) {
+    // Si annulation, fin ou remise en attente, vérifier l'état du bien
+    if (in_array($action, ['annuler', 'terminer', 'remettre_en_attente'])) {
         $bid = $pdo->prepare("SELECT bien_id FROM reservations WHERE id = ?");
         $bid->execute([$res_id]);
         $b = $bid->fetchColumn();
@@ -40,7 +45,22 @@ if ($res_id && in_array($action, ['valider', 'annuler', 'terminer'])) {
         }
     }
 
-    header("Location: reservations.php?msg=" . urlencode("Réservation mise à jour avec succès."));
+    $status_labels = [
+        'valider'             => 'validée',
+        'annuler'             => 'annulée',
+        'terminer'            => 'terminée',
+        'remettre_en_attente' => 'remise en attente'
+    ];
+
+    $msg = urlencode("Réservation #" . $res_id . " " . $status_labels[$action] . " avec succès.");
+
+    // Rediriger vers la page d'origine (index ou reservations)
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    if (str_contains($referer, 'index.php')) {
+        header("Location: index.php?msg=" . $msg);
+    } else {
+        header("Location: reservations.php?msg=" . $msg);
+    }
     exit;
 }
 
@@ -84,7 +104,7 @@ $page_title = 'Gestion des Réservations — LuxeImmo';
 require_once '../includes/header.php';
 ?>
 
-<div style="display:flex;min-height:100vh;background:var(--color-bg-dark);">
+<div class="dashboard-layout">
     <?php require_once 'sidebar.php'; ?>
     <div class="main-content-with-sidebar" style="flex:1;">
 
@@ -203,27 +223,42 @@ require_once '../includes/header.php';
                                     <?php if ($r['statut'] === 'en_attente'): ?>
                                     <a href="reservations.php?action=valider&id=<?= $r['id'] ?>"
                                        class="btn-outline-immo" style="font-size:0.75rem;padding:5px 10px;border-color:rgba(16,185,129,0.4);color:#6ee7b7;"
-                                       data-confirm="Valider la réservation #<?= $r['id'] ?> ?">
+                                       onclick="return confirm('Êtes-vous sûr de vouloir VALIDER la réservation #<?= $r['id'] ?> ?');">
                                         <i class="fas fa-check"></i> Valider
                                     </a>
                                     <a href="reservations.php?action=annuler&id=<?= $r['id'] ?>"
                                        class="btn-outline-immo" style="font-size:0.75rem;padding:5px 10px;border-color:rgba(239,68,68,0.4);color:#fca5a5;"
-                                       data-confirm="Annuler la réservation #<?= $r['id'] ?> ?">
+                                       onclick="return confirm('Êtes-vous sûr de vouloir ANNULER la réservation #<?= $r['id'] ?> ?');">
                                         <i class="fas fa-times"></i> Annuler
                                     </a>
                                     <?php elseif ($r['statut'] === 'validee'): ?>
                                     <a href="reservations.php?action=terminer&id=<?= $r['id'] ?>"
                                        class="btn-outline-immo" style="font-size:0.75rem;padding:5px 10px;"
-                                       data-confirm="Marquer la réservation #<?= $r['id'] ?> comme terminée ?">
+                                       onclick="return confirm('Marquer la réservation #<?= $r['id'] ?> comme terminée ?');">
                                         <i class="fas fa-flag-checkered"></i> Terminer
                                     </a>
                                     <a href="reservations.php?action=annuler&id=<?= $r['id'] ?>"
                                        class="btn-outline-immo" style="font-size:0.75rem;padding:5px 10px;border-color:rgba(239,68,68,0.4);color:#fca5a5;"
-                                       data-confirm="Annuler cette réservation validée ?">
-                                        <i class="fas fa-times"></i>
+                                       onclick="return confirm('ANNULER la réservation #<?= $r['id'] ?> ?');">
+                                        <i class="fas fa-times"></i> Annuler
+                                    </a>
+                                    <?php elseif ($r['statut'] === 'annulee'): ?>
+                                    <a href="reservations.php?action=valider&id=<?= $r['id'] ?>"
+                                       class="btn-outline-immo" style="font-size:0.75rem;padding:5px 10px;border-color:rgba(16,185,129,0.4);color:#6ee7b7;"
+                                       onclick="return confirm('Ré-activer et VALIDER la réservation #<?= $r['id'] ?> ?');">
+                                        <i class="fas fa-check"></i> Valider
+                                    </a>
+                                    <a href="reservations.php?action=remettre_en_attente&id=<?= $r['id'] ?>"
+                                       class="btn-outline-immo" style="font-size:0.75rem;padding:5px 10px;"
+                                       onclick="return confirm('Remettre la réservation #<?= $r['id'] ?> en attente ?');">
+                                        <i class="fas fa-undo"></i> En attente
                                     </a>
                                     <?php else: ?>
-                                    <span style="color:var(--color-text-muted);font-size:0.78rem;">—</span>
+                                    <a href="reservations.php?action=remettre_en_attente&id=<?= $r['id'] ?>"
+                                       class="btn-outline-immo" style="font-size:0.75rem;padding:5px 10px;"
+                                       onclick="return confirm('Réouvrir la réservation #<?= $r['id'] ?> ?');">
+                                        <i class="fas fa-undo"></i> Réouvrir
+                                    </a>
                                     <?php endif; ?>
                                 </div>
                             </td>
