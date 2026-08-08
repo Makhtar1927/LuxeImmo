@@ -16,9 +16,9 @@ $page_description = $page_description ?? 'Découvrez les plus belles villas et a
 <html lang="fr">
 <head>
     <script>
-        // Initialiser le thème immédiatement avant le rendu pour éviter le scintillement (FOUC)
-        const storedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', storedTheme);
+        // Mode clair uniquement — thème verrouillé
+        localStorage.setItem('theme', 'light');
+        document.documentElement.setAttribute('data-theme', 'light');
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -866,9 +866,30 @@ body {
     font-weight: var(--fw-medium);
 }
 
-/* --- Table Admin --- */
+/* --- Table Admin & Conteneur Responsif --- */
+.table-responsive-immo {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-sm);
+}
+
+.table-responsive-immo::-webkit-scrollbar {
+    height: 6px;
+}
+.table-responsive-immo::-webkit-scrollbar-track {
+    background: var(--color-surface);
+    border-radius: 3px;
+}
+.table-responsive-immo::-webkit-scrollbar-thumb {
+    background: var(--color-primary-light);
+    border-radius: 3px;
+}
+
 .table-immo {
     width: 100%;
+    min-width: 720px;
     border-collapse: separate;
     border-spacing: 0;
 }
@@ -882,6 +903,7 @@ body {
     letter-spacing: 0.8px;
     padding: 14px 16px;
     border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
 }
 
 .table-immo thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
@@ -893,6 +915,7 @@ body {
     color: var(--color-text-secondary);
     font-size: 0.88rem;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 .table-immo tbody tr:hover td {
@@ -902,79 +925,376 @@ body {
 .table-immo tbody tr:last-child td {
     border-bottom: none;
 }
-
 /* --- Sidebar (Dashboard Commercial/Client) --- */
 .sidebar {
     width: 260px;
-    min-height: 100vh;
+    height: 100vh;
+    max-height: 100vh;
     background: var(--color-bg-card);
     border-right: 1px solid var(--color-border);
-    padding: 28px 16px;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 999;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.04);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .sidebar-logo {
-    font-weight: var(--fw-extrabold);
-    font-size: 1.3rem;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    line-height: 1 !important;
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+.sidebar-logo .logo-icon {
+    font-size: 1.22rem !important;
     background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    padding: 0 12px;
-    margin-bottom: 36px;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+    filter: drop-shadow(0 0 6px rgba(108,99,255,0.35));
 }
 
+.sidebar-logo-text {
+    font-weight: 800 !important;
+    font-size: 1.2rem !important;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.4px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    margin: 0 !important;
+    vertical-align: middle !important;
+}
+
+/* ── Bouton icône (Thème) ── */
+.sidebar-icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    border: 1px solid var(--color-border);
+    background: rgba(108, 99, 255, 0.06);
+    color: var(--color-text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    flex-shrink: 0;
+    padding: 0;
+    outline: none;
+}
+
+.sidebar-icon-btn:hover {
+    background: rgba(108, 99, 255, 0.14);
+    color: var(--color-primary-light);
+    border-color: rgba(108, 99, 255, 0.3);
+    box-shadow: 0 2px 10px rgba(108, 99, 255, 0.12);
+}
+
+.sidebar-icon-btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.sidebar-icon-btn i {
+    font-size: 0.88rem;
+    line-height: 1;
+    pointer-events: none;
+}
+
+/* Gestion icône soleil/lune selon le thème actif */
+.theme-toggle-btn .sun-icon  { display: inline-block; }
+.theme-toggle-btn .moon-icon { display: none; }
+
+[data-theme="dark"] .theme-toggle-btn .sun-icon  { display: none; }
+[data-theme="dark"] .theme-toggle-btn .moon-icon { display: inline-block; }
+
+.sidebar-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 12px 14px; /* Rapprocher Navigation de l'en-tête */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+}
+
+.sidebar-body::-webkit-scrollbar { width: 3px; }
+.sidebar-body::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+}
+
+/* Titres de section */
+.sidebar-section-title {
+    font-size: 0.63rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    padding: 4px 10px 4px; /* Espacement compact */
+    opacity: 0.75;
+}
+
+/* Liens de navigation */
 .sidebar-nav-link {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 11px 14px;
-    border-radius: var(--radius-md);
+    gap: 11px;
+    padding: 10px 12px;
+    border-radius: 10px;
     color: var(--color-text-muted);
     text-decoration: none;
-    font-size: 0.88rem;
-    font-weight: var(--fw-medium);
-    transition: var(--transition-fast);
-    margin-bottom: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: background 0.18s, color 0.18s;
+    margin-bottom: 3px;
+    position: relative;
+    overflow: hidden;
 }
 
-.sidebar-nav-link i {
-    font-size: 1rem;
-    width: 20px;
+.sidebar-nav-link .nav-icon {
+    font-size: 0.95rem;
+    width: 18px;
     text-align: center;
+    flex-shrink: 0;
+    opacity: 0.8;
+    transition: opacity 0.18s;
 }
 
-.sidebar-nav-link:hover,
-.sidebar-nav-link.active {
-    background: rgba(108,99,255,0.12);
+.sidebar-nav-link:hover {
+    background: rgba(108, 99, 255, 0.07);
     color: var(--color-primary-light);
 }
 
+.sidebar-nav-link:hover .nav-icon {
+    opacity: 1;
+}
+
 .sidebar-nav-link.active {
-    background: rgba(108,99,255,0.18);
-    font-weight: var(--fw-semibold);
+    background: linear-gradient(90deg, rgba(108,99,255,0.13) 0%, rgba(108,99,255,0.03) 100%);
+    color: var(--color-primary-light);
+    font-weight: 700;
+}
+
+.sidebar-nav-link.active .nav-icon {
+    opacity: 1;
+}
+
+/* Barre active (bord gauche) */
+.sidebar-nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    bottom: 7px;
+    width: 3px;
+    background: var(--color-primary-light);
+    border-radius: 0 3px 3px 0;
+}
+
+.sidebar-nav-link.logout-link { color: #ef4444; }
+.sidebar-nav-link.logout-link:hover { background: rgba(239,68,68,0.07); color: #ef4444; }
+
+.sidebar-badge-count {
+    margin-left: auto;
+    background: rgba(239,68,68,0.12);
+    color: var(--color-danger);
+    border-radius: 20px;
+    padding: 2px 7px;
+    font-size: 0.7rem;
+    font-weight: 700;
 }
 
 .sidebar-divider {
     border: none;
     border-top: 1px solid var(--color-border);
-    margin: 16px 0;
+    margin: 10px 0;
+    opacity: 0.6;
 }
 
+/* ─── 3. Footer utilisateur ─── */
+.sidebar-footer {
+    padding: 12px 14px;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-card);
+    flex-shrink: 0;
+}
+
+.sidebar-user-card {
+    padding: 10px 12px;
+    background: linear-gradient(135deg, rgba(108,99,255,0.07) 0%, rgba(167,139,250,0.02) 100%);
+    border: 1px solid rgba(108,99,255,0.14);
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.sidebar-user-card:hover {
+    border-color: rgba(108,99,255,0.3);
+    background: linear-gradient(135deg, rgba(108,99,255,0.11) 0%, rgba(167,139,250,0.05) 100%);
+}
+
+.user-avatar-badge {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    background: var(--gradient-primary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: #fff;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(108,99,255,0.22);
+}
+
+.user-status-dot {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 9px;
+    height: 9px;
+    background: #10b981;
+    border: 2px solid var(--color-bg-card);
+    border-radius: 50%;
+}
+
+.user-details {
+    overflow: hidden;
+    min-width: 0;
+    flex: 1;
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    margin-bottom: 3px;
+}
+
+.user-role-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.2px;
+}
+
+.user-role-badge.commercial {
+    background: rgba(108,99,255,0.12);
+    color: var(--color-primary-light);
+}
+
+.user-role-badge.client {
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+}
+
+/* ─── Mode Sidebar Réduite (Desktop ≥ 1201px) ─── */
+@media (min-width: 1201px) {
+    .sidebar {
+        transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .main-content-with-sidebar {
+        transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1), width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dashboard-layout.sidebar-collapsed .sidebar { width: 68px; }
+
+    .dashboard-layout.sidebar-collapsed .main-content-with-sidebar {
+        margin-left: 68px !important;
+        width: calc(100% - 68px) !important;
+    }
+
+    .dashboard-layout.sidebar-collapsed ~ .footer-immo {
+        margin-left: 68px !important;
+    }
+
+    .dashboard-layout.sidebar-collapsed .sidebar-logo-text,
+    .dashboard-layout.sidebar-collapsed .sidebar-section-title,
+    .dashboard-layout.sidebar-collapsed .sidebar-nav-text,
+    .dashboard-layout.sidebar-collapsed .user-details {
+        display: none !important;
+    }
+
+    .dashboard-layout.sidebar-collapsed .sidebar-header {
+        padding: 20px 10px 14px;
+        justify-content: center;
+    }
+
+    .dashboard-layout.sidebar-collapsed .sidebar-logo {
+        justify-content: center;
+    }
+
+    .dashboard-layout.sidebar-collapsed .sidebar-nav-link {
+        justify-content: center;
+        padding: 11px 0;
+        overflow: visible;
+    }
+
+    .dashboard-layout.sidebar-collapsed .sidebar-user-card {
+        padding: 8px 4px;
+        justify-content: center;
+    }
+}
+
+
+
+
+/* --- Contenu principal --- */
 .main-content-with-sidebar {
     margin-left: 260px;
-    padding: 32px;
+    padding: 28px 24px;
     min-height: 100vh;
+    min-width: 0;
+    width: calc(100% - 260px);
+    max-width: calc(100% - 260px);
+    box-sizing: border-box !important;
+    overflow-x: hidden;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Footer aligné avec le contenu du dashboard (desktop) --- */
 .dashboard-layout ~ .footer-immo {
     margin-left: 260px;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 
@@ -1165,6 +1485,9 @@ body {
     display: flex;
     min-height: 100vh;
     background: var(--color-bg-dark);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
 }
 
 .sticky-sidebar {
@@ -1229,7 +1552,7 @@ body {
     pointer-events: auto;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .dashboard-layout {
         flex-direction: column;
     }
@@ -1249,17 +1572,109 @@ body {
     }
     .main-content-with-sidebar {
         margin-left: 0 !important;
-        padding: 24px 16px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 20px 16px !important;
     }
     .dashboard-mobile-header {
         display: flex;
     }
-    .hero-stats {
-        gap: 20px;
-    }
-    /* Réinitialiser le décalage du footer sur mobile */
+    /* Réinitialiser le décalage du footer sur mobile & tablette */
     .dashboard-layout ~ .footer-immo {
         margin-left: 0;
+    }
+    /* Stat cards en grille 2 colonnes sur tablette */
+    .stat-cards-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    /* Tables: scroll horizontal */
+    .table-responsive-dashboard {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Stat cards: 2 colonnes */
+    .stat-cards-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+    /* Padding réduit */
+    .main-content-with-sidebar {
+        padding: 16px 12px !important;
+    }
+    /* Header dashboard */
+    .dashboard-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    /* Revenue banner */
+    .revenue-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 18px !important;
+    }
+    /* Filtres en colonne */
+    .filter-tabs-bar {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    /* Masquer colonnes secondaires dans les tableaux */
+    .table-immo .col-hide-sm {
+        display: none;
+    }
+    /* Boutons d'action plus compacts */
+    .action-btn-group {
+        gap: 4px;
+    }
+    .btn-action-sm {
+        padding: 4px 8px !important;
+        font-size: 0.75rem !important;
+    }
+    /* Form card en colonne */
+    .form-grid-2col {
+        grid-template-columns: 1fr !important;
+    }
+    /* Section titres réduits */
+    .dashboard-section-title {
+        font-size: 1.1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Stat cards: 1 seule colonne sur très petit écran */
+    .stat-cards-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+    /* Padding minimal */
+    .main-content-with-sidebar {
+        padding: 12px 10px !important;
+    }
+    /* Cartes stat compactes */
+    .stat-card {
+        padding: 14px 16px !important;
+    }
+    .stat-value {
+        font-size: 1.6rem !important;
+    }
+    /* Tables: font plus petite */
+    .table-immo thead th,
+    .table-immo tbody td {
+        padding: 8px 10px !important;
+        font-size: 0.78rem !important;
+    }
+    /* Mobile header réduit */
+    .dashboard-mobile-header {
+        padding: 12px 14px;
+    }
+    /* Sidebar logo mobile */
+    .sidebar-logo-mobile {
+        font-size: 1rem;
     }
 }
 
@@ -1282,23 +1697,39 @@ body {
     }
 }
 
-/* --- Ajustements pour écrans courts (comme Nest Hub) --- */
+/* --- Ajustements spécifiques Nest Hub (1024x600) & écrans courts / tactiles --- */
 @media (max-height: 720px) {
     .sticky-sidebar {
         position: static !important;
     }
     .hero-section {
         min-height: auto !important;
-        padding: 60px 0 40px !important;
+        padding: 40px 0 30px !important;
     }
     .hero-section .row.min-vh-85 {
         min-height: auto !important;
     }
     .hero-stats {
-        margin-top: 28px !important;
+        margin-top: 20px !important;
     }
     .hero-subtitle {
+        margin-bottom: 18px !important;
+    }
+    .glass-card {
+        padding: 20px !important;
         margin-bottom: 24px !important;
+    }
+    .table-immo thead th,
+    .table-immo tbody td {
+        padding: 10px 12px !important;
+        font-size: 0.82rem !important;
+    }
+    .form-control-immo, .form-select-immo {
+        padding: 8px 12px !important;
+        font-size: 0.85rem !important;
+    }
+    .upload-zone {
+        padding: 18px 16px !important;
     }
 }
 
@@ -1308,10 +1739,10 @@ body {
     }
 }
 
-/* --- Sélecteur de Thème (Theme Switcher Button) --- */
+/* --- Bouton Thème (global navbar) --- */
 .theme-toggle-btn {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -1332,21 +1763,12 @@ body {
     transform: scale(1.05) rotate(15deg);
 }
 
-.theme-toggle-btn .sun-icon {
-    display: none;
-}
+/* Icônes soleil/lune — mode clair par défaut : soleil visible */
+.theme-toggle-btn .sun-icon  { display: inline-block; }
+.theme-toggle-btn .moon-icon { display: none; }
 
-.theme-toggle-btn .moon-icon {
-    display: block;
-}
-
-[data-theme="dark"] .theme-toggle-btn .sun-icon {
-    display: block;
-}
-
-[data-theme="dark"] .theme-toggle-btn .moon-icon {
-    display: none;
-}
+[data-theme="dark"] .theme-toggle-btn .sun-icon  { display: none; }
+[data-theme="dark"] .theme-toggle-btn .moon-icon { display: inline-block; }
 
 /* --- Dropdown Adaptatif Thème --- */
 .dropdown-menu-immo {

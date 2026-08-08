@@ -62,3 +62,8 @@ projet-immo/
 - **CSS personnalisé** (Design system dark mode premium, animations, glassmorphism)
 - **JavaScript vanilla** (Validation, AJAX favoris, toast notifications, drag & drop)
 - **Font Awesome 6** + **Google Fonts** (Plus Jakarta Sans)
+
+## Documentation
+
+- **[DOCUMENTATION.md](file:///c:/xampp/htdocs/Dev_Web_Avanc%C3%A9/DOCUMENTATION.md)** : Rapport complet d'architecture technique, modèle de base de données (MCD/Diagramme ER), périmètre fonctionnel et mécanismes de sécurité.
+

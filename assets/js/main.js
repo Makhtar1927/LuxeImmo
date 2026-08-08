@@ -281,30 +281,10 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 
-    // ====================================================
-    // Theme Switcher (Light / Dark Mode)
-    // ====================================================
-    const toggleTheme = () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        if (window.showToast) {
-            window.showToast(`Mode ${newTheme === 'dark' ? 'sombre' : 'clair'} activé`, 'info');
-        }
-    };
-
-    document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleTheme();
-        });
-    });
+    // Theme Switcher désactivé — mode clair uniquement
 
     // ====================================================
-    // 11. Sidebar Drawer Toggle for mobile dashboards
+    // 11. Sidebar Drawer Toggle for mobile/tablet dashboards
     // ====================================================
     const sidebarToggle = document.querySelector('.sidebar-toggle-btn');
     const sidebar = document.querySelector('.sidebar');
@@ -312,16 +292,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (sidebarToggle && sidebar && sidebarOverlay) {
         const toggleSidebar = (show) => {
-            sidebar.classList.toggle('show', show);
-            sidebarOverlay.classList.toggle('show', show);
+            const isShowing = typeof show === 'boolean' ? show : !sidebar.classList.contains('show');
+            sidebar.classList.toggle('show', isShowing);
+            sidebarOverlay.classList.toggle('show', isShowing);
         };
 
-        sidebarToggle.addEventListener('click', () => toggleSidebar(true));
+        sidebarToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleSidebar();
+        });
         sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
 
         window.addEventListener('resize', () => {
-            if (window.innerWidth > 1024) {
+            if (window.innerWidth > 1200) {
                 toggleSidebar(false);
+            }
+        });
+    }
+
+    // ====================================================
+    // 12. Mode Sidebar Réduite (Desktop Collapsible Sidebar)
+    // ====================================================
+    const dashboardLayout = document.querySelector('.dashboard-layout');
+
+    if (dashboardLayout) {
+        if (localStorage.getItem('sidebar_collapsed') === 'true' && window.innerWidth > 1200) {
+            dashboardLayout.classList.add('sidebar-collapsed');
+        }
+
+        document.querySelectorAll('.sidebar-collapse-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (window.innerWidth <= 1200) return;
+                const collapsed = dashboardLayout.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('sidebar_collapsed', collapsed ? 'true' : 'false');
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 1200) {
+                dashboardLayout.classList.remove('sidebar-collapsed');
             }
         });
     }

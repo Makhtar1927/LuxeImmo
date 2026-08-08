@@ -1,10 +1,6 @@
 <?php
-/**
- * client/sidebar.php — Sidebar commune aux pages client
- */
 $current = basename($_SERVER['PHP_SELF']);
 
-// Récupérer le nombre de favoris
 $fav_count = 0;
 if (isset($pdo) && isset($_SESSION['user_id'])) {
     $fav_stmt = $pdo->prepare("SELECT COUNT(*) FROM favoris WHERE client_id = ?");
@@ -12,69 +8,70 @@ if (isset($pdo) && isset($_SESSION['user_id'])) {
     $fav_count = $fav_stmt->fetchColumn();
 }
 ?>
-<!-- Mobile Header for Dashboard -->
 <div class="dashboard-mobile-header">
     <button class="sidebar-toggle-btn" title="Ouvrir le menu" aria-label="Ouvrir le menu">
         <i class="fas fa-bars"></i>
     </button>
     <div class="sidebar-logo-mobile">
-        <i class="fas fa-gem" style="color:var(--color-primary-light);"></i> LuxeImmo
+        <i class="fas fa-gem logo-icon"></i> LuxeImmo
     </div>
-    <div style="width: 38px;"></div> <!-- Spacer to keep logo centered -->
+    <div style="width: 34px;"></div>
 </div>
 
-<!-- Sidebar Overlay -->
 <div class="sidebar-overlay"></div>
 
-<div class="sidebar">
-    <!-- Logo + Theme Toggle -->
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:0 12px; margin-bottom:36px;">
-        <div class="sidebar-logo" style="margin-bottom:0;">
-            <i class="fas fa-gem me-2" style="background:var(--gradient-primary); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;"></i>
-            LuxeImmo
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <i class="fas fa-gem logo-icon"></i>
+            <span class="sidebar-logo-text">LuxeImmo</span>
         </div>
-        <button class="theme-toggle-btn" title="Changer de thème" aria-label="Basculer le thème">
-            <i class="fas fa-sun sun-icon"></i>
-            <i class="fas fa-moon moon-icon"></i>
-        </button>
     </div>
 
-    <a href="dashboard.php" class="sidebar-nav-link <?= $current === 'dashboard.php' ? 'active' : '' ?>">
-        <i class="fas fa-tachometer-alt"></i> Mon Espace
-    </a>
-    <a href="favoris.php" class="sidebar-nav-link <?= $current === 'favoris.php' ? 'active' : '' ?>">
-        <i class="fas fa-heart"></i> Mes Favoris
-        <?php if ($fav_count > 0): ?>
-        <span style="margin-left:auto;background:rgba(239,68,68,0.15);color:var(--color-danger);
-                     border-radius:20px;padding:1px 8px;font-size:0.72rem;font-weight:700;">
-            <?= $fav_count ?>
-        </span>
-        <?php endif; ?>
-    </a>
+    <div class="sidebar-body">
+        <div class="sidebar-section-title">Navigation</div>
 
-    <hr class="sidebar-divider">
+        <a href="dashboard.php" class="sidebar-nav-link <?= $current === 'dashboard.php' ? 'active' : '' ?>">
+            <i class="fas fa-tachometer-alt nav-icon"></i>
+            <span class="sidebar-nav-text">Mon Espace</span>
+        </a>
+        <a href="favoris.php" class="sidebar-nav-link <?= $current === 'favoris.php' ? 'active' : '' ?>">
+            <i class="fas fa-heart nav-icon"></i>
+            <span class="sidebar-nav-text">Mes Favoris</span>
+            <?php if ($fav_count > 0): ?>
+            <span class="sidebar-badge-count">
+                <?= $fav_count ?>
+            </span>
+            <?php endif; ?>
+        </a>
 
-    <a href="../index.php" class="sidebar-nav-link">
-        <i class="fas fa-search"></i> Explorer les biens
-    </a>
-    <a href="../logout.php" class="sidebar-nav-link" style="color:var(--color-danger) !important; margin-top:auto;">
-        <i class="fas fa-sign-out-alt"></i> Déconnexion
-    </a>
+        <div class="sidebar-divider"></div>
 
-    <!-- Profil utilisateur -->
-    <div style="margin-top:20px; padding:16px 12px; background:rgba(108,99,255,0.08); border-radius:12px;">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:36px; height:36px; background:var(--gradient-primary); border-radius:50%;
-                        display:flex; align-items:center; justify-content:center;
-                        font-weight:800; color:#fff; font-size:0.9rem; flex-shrink:0;">
-                <?= strtoupper(substr($_SESSION['prenom'], 0, 1)) ?>
+        <div class="sidebar-section-title">Raccourcis</div>
+
+        <a href="../index.php" class="sidebar-nav-link">
+            <i class="fas fa-search nav-icon"></i>
+            <span class="sidebar-nav-text">Explorer les biens</span>
+        </a>
+
+        <a href="../logout.php" class="sidebar-nav-link logout-link">
+            <i class="fas fa-sign-out-alt nav-icon"></i>
+            <span class="sidebar-nav-text">Déconnexion</span>
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-user-card">
+            <div class="user-avatar-badge">
+                <?= strtoupper(substr($_SESSION['prenom'] ?? 'C', 0, 1)) ?>
+                <span class="user-status-dot" title="En ligne"></span>
             </div>
-            <div>
-                <div style="font-weight:700; font-size:0.85rem; color:var(--color-text-primary);">
-                    <?= htmlspecialchars($_SESSION['prenom'] . ' ' . $_SESSION['nom']) ?>
+            <div class="user-details">
+                <div class="user-name"><?= htmlspecialchars(($_SESSION['prenom'] ?? '') . ' ' . ($_SESSION['nom'] ?? '')) ?></div>
+                <div class="user-role-badge client">
+                    <i class="fas fa-user me-1"></i> Client Luxe
                 </div>
-                <div style="font-size:0.72rem; color:var(--color-text-muted);">Client</div>
             </div>
         </div>
     </div>
-</div>
+</aside>

@@ -12,15 +12,8 @@
             <i class="fas fa-gem me-2" style="font-size:1.1rem;"></i>LuxeImmo
         </a>
 
-        <!-- Controls container for mobile (Theme Switcher + Hamburger) -->
+        <!-- Controls container for mobile -->
         <div class="d-flex align-items-center gap-2">
-            <!-- Theme Toggle Mobile -->
-            <button class="theme-toggle-btn d-lg-none" title="Changer de thème" aria-label="Basculer le thème">
-                <i class="fas fa-sun sun-icon"></i>
-                <i class="fas fa-moon moon-icon"></i>
-            </button>
-            
-            <!-- Mobile Toggle -->
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarContent" style="color: var(--color-text-secondary); padding: 0;">
                 <i class="fas fa-bars"></i>
@@ -50,13 +43,6 @@
 
             <!-- Actions selon le rôle -->
             <ul class="navbar-nav align-items-stretch align-items-lg-center gap-2 mt-3 mt-lg-0">
-                <!-- Bouton Theme Toggle Desktop -->
-                <li class="nav-item d-none d-lg-block">
-                    <button class="theme-toggle-btn" id="theme-toggle" title="Changer de thème" aria-label="Basculer le thème">
-                        <i class="fas fa-sun sun-icon"></i>
-                        <i class="fas fa-moon moon-icon"></i>
-                    </button>
-                </li>
                 <?php if (isset($_SESSION['user_id'])): ?>
 
                     <?php if ($_SESSION['role'] === 'commercial'): ?>

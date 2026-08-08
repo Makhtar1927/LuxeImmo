@@ -109,7 +109,7 @@ require_once '../includes/header.php';
                     </a>
                 </div>
             <?php else: ?>
-                <div style="overflow-x:auto;">
+                <div class="table-responsive-immo">
                     <table class="table-immo">
                         <thead>
                             <tr>
